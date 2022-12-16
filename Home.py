@@ -24,3 +24,9 @@ st.markdown("""
         - Melhores Restaurantes dos Principais tipos Culinários
         - Top 10 Restaurantes por avaliação
     """)
+with st.container():
+    expander = st.expander("Mais informações")
+    expander.write("""
+    Informações apresentadas de acordo com a curso da Comunidade DS 
+    """)
+    expander.image("https://static.vecteezy.com/system/resources/previews/006/020/770/original/brain-tech-mind-data-logo-free-vector.jpg",  width=150)    
