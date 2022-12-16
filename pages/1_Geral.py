@@ -12,7 +12,7 @@ except ImportError:
     import Image
 import folium
 from streamlit_folium import folium_static
-
+from folium.plugins import MarkerCluster
 st.set_page_config (page_title='Visão Geral', layout='wide', page_icon="📊")
 
 # Leitura do arquivo 7527 rows × 21 columns
@@ -85,3 +85,15 @@ with st.container():
         # Tipos de Culinária
         df3= len(df1.loc[:,['cuisines']].groupby(['cuisines']).nunique().reset_index())
         col5.metric('Tipos de Culinária',df3)
+        
+with st.container():
+    st.markdown( '#### Localização dos Restaurantes' )
+    coluna = ['restaurant_name','latitude','longitude']
+    dados = df1.loc[:,coluna].groupby(coluna).mean().reset_index()
+    mapa = folium.Map()
+    cluster = MarkerCluster().add_to(mapa)        
+    for index, location_info in dados.iterrows():
+        folium.Marker([location_info['latitude'],location_info['longitude']],
+        popup= df1.loc[0,'restaurant_name']).add_to(cluster)
+    
+    st.map(mapa)
