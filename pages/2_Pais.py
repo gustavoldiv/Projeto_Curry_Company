@@ -13,7 +13,7 @@ except ImportError:
 import folium
 from streamlit_folium import folium_static
 
-st.set_page_config (page_title='Visão País', layout='wide')
+st.set_page_config (page_title='Visão País', layout='wide', page_icon="🌍")
 
 # Leitura do arquivo 7527 rows × 21 columns
 df = pd.read_csv('dataset/zomato.csv')
