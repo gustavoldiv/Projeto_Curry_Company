@@ -88,12 +88,11 @@ with st.container():
         
 with st.container():
     st.markdown( '#### Localização dos Restaurantes' )
-    coluna = ['restaurant_name','latitude','longitude']
+    coluna=['restaurant_name','latitude','longitude']
     dados = df1.loc[:,coluna].groupby(coluna).mean().reset_index()
     mapa = folium.Map()
     cluster = MarkerCluster().add_to(mapa)        
     for index, location_info in dados.iterrows():
         folium.Marker([location_info['latitude'],location_info['longitude']],
-        popup= df1.loc[0,'restaurant_name']).add_to(cluster)
-    
-    st.map(mapa)
+        popup= df1.loc[:,'restaurant_name']).add_to(cluster)
+    folium_static(mapa)
