@@ -3,12 +3,13 @@ from PIL import Image
 
 st.set_page_config(
     page_title="Página inicial",
-    page_icon="", layout='wide')
+    page_icon="🔰", layout='wide')
 
 st.markdown("""
     ### Como utilizar o Dashboard?
     - Visão Geral:
         - Dados gerais dos restaurantes
+        - Mapa dos restaurantes cadastrados
     - Visão País:
         - Qtde de Restaurantes por País
         - Qtde de Cidades por País
