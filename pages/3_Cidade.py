@@ -13,7 +13,7 @@ except ImportError:
 import folium
 from streamlit_folium import folium_static
 
-st.set_page_config (page_title='Visão Cidade', layout='wide')
+st.set_page_config (page_title='Visão Cidade', layout='wide', page_icon="🏟")
 
 # Leitura do arquivo 7527 rows × 21 columns
 df = pd.read_csv('dataset/zomato.csv')
@@ -52,33 +52,65 @@ df1 = df1.loc[linhas_selecionadas, :]
 # =======================================
 st.title( 'Visão Cidades' )
 with st.container():
-    st.markdown( '#### Top 10 cidades com mais restaurantes' )
+    
     df_aux = df1.loc[:,['restaurant_id','city']].groupby(['city']).count()
     df_aux = df_aux.sort_values('restaurant_id',ascending=False).reset_index().head(10)
-    fig = px.bar(df_aux,x='city',y='restaurant_id')
+    
+    fig = px.bar(df_aux,x='city',y='restaurant_id'
+                 ,title="Top 10 cidades com mais restaurantes"
+                 ,labels={"city": "Cidade",
+                          "restaurant_id": "Qtde de restaurantes"}
+                 ,text_auto=True
+                 ,color_discrete_sequence=['pink'])
+    fig.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
+    
     st.plotly_chart(fig)
     
 with st.container():
     col1,col2 = st.columns( 2, gap='large' )
     with col1:
-        st.markdown( '##### Top 7 cidades com restaurantes com média de avaliação acima de 4' )
+        
         df_aux1 = df1.loc[df1['aggregate_rating']>4,:]
-        df_aux1 = df_aux1.loc[:,['restaurant_id','city']].groupby(['city']).count()
-        df_aux1 = df_aux1.sort_values('restaurant_id',ascending=False).reset_index().head(7)
-        fig = px.bar(df_aux1,x='city',y='restaurant_id')
+        df_aux1 = round(df_aux1.loc[:,['aggregate_rating','city']].groupby(['city']).mean(),2).head(7)
+        df_aux1 = df_aux1.sort_values('aggregate_rating',ascending=False).reset_index()
+        
+        fig = px.bar(df_aux1,x='city',y='aggregate_rating'
+                 ,title="Top 7 cidades com restaurantes com média de avaliação acima de 4"
+                 ,labels={"city": "Cidade",
+                          "aggregate_rating": "Média de avaliação"}
+                 ,text_auto=True
+                 ,color_discrete_sequence=['gold'])
+        fig.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
+        
         st.plotly_chart(fig)
         
     with col2:
-        st.markdown('##### Top 7 cidades com restaurantes com média de avaliação abaixo de 2.5')
-        df_aux1 = df1.loc[df1['aggregate_rating']<2.5,:]
-        df_aux1 = df_aux1.loc[:,['restaurant_id','city']].groupby(['city']).count()
-        df_aux1 = df_aux1.sort_values('restaurant_id',ascending=False).reset_index().head(7)
-        fig = px.bar(df_aux1,x='city',y='restaurant_id')
+        
+        df_aux2 = df1.loc[df1['aggregate_rating']<=2.5,:]
+        df_aux2 = round(df_aux2.loc[:,['aggregate_rating','city']].groupby(['city']).mean(),2).head(7)
+        df_aux2 = df_aux2.sort_values('aggregate_rating',ascending=False).reset_index()
+
+        fig = px.bar(df_aux2,x='city',y='aggregate_rating'
+                 ,title="Top 7 cidades com restaurantes com média de avaliação abaixo de 2.5"
+                 ,labels={"city": "Cidade",
+                          "aggregate_rating": "Média de avaliação"}
+                 ,text_auto=True
+                 ,color_discrete_sequence=['silver'])
+        fig.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
+        
         st.plotly_chart(fig)
 
 with st.container():
-        st.markdown( '#### Top 10 cidades com mais restaurantes com tipos culinários distintos' )
+        
         df_aux = df1.loc[:,['cuisines','city']].groupby(['city']).nunique()
         df_aux = df_aux.sort_values('cuisines',ascending=False).reset_index().head(10)
-        fig = px.bar(df_aux1,x='city',y='restaurant_id')
+        
+        fig = px.bar(df_aux,x='city',y='cuisines'
+                 ,title="Top 10 cidades com mais restaurantes com tipos culinários distintos"
+                 ,labels={"city": "Cidade",
+                          "cuisines": "Qtde distintas de Culinária"}
+                 ,text_auto=True
+                 ,color_discrete_sequence=['green'])
+        fig.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
+        
         st.plotly_chart(fig)
